@@ -57,22 +57,19 @@
 #define CHECK_VTABLE(s, ctx, driver_path, func) \
     if (!va_checkVtable(dpy, ctx->vtable->va##func, #func)) { \
         s = VA_STATUS_ERROR_UNIMPLEMENTED; \
-    	fprintf(stderr, "libva error: %s context: %s", #driver_path, #func); \
-        // va_errorMessage(dpy, "%s %s error\n", #driver_path, #func); \
+    	  fprintf(stderr, "libva error: %s context: %s", #driver_path, #func); \
     }
 
 #define CHECK_MAXIMUM(s, ctx, driver_path, var) \
     if (!va_checkMaximum(dpy, ctx->max_##var, #var)) { \
         s = VA_STATUS_ERROR_UNKNOWN; \
-    	fprintf(stderr, "libva error: %s context: %s", #driver_path, #var); \
-        // va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
+    	  fprintf(stderr, "libva error: %s context: %s", #driver_path, #var); \
     }
 
 #define CHECK_STRING(s, ctx, driver_path, var) \
     if (!va_checkString(dpy, ctx->str_##var, #var)) { \
         s = VA_STATUS_ERROR_UNKNOWN; \
-    	fprintf(stderr, "libva error: %s context: %s", #driver_path, #var); \
-        // va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
+    	  fprintf(stderr, "libva error: %s context: %s", #driver_path, #var); \
     }
 
 
