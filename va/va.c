@@ -53,9 +53,29 @@
 #endif
 
 #define ASSERT      assert
-#define CHECK_VTABLE(s, ctx, func) if (!va_checkVtable(dpy, ctx->vtable->va##func, #func)) s = VA_STATUS_ERROR_UNIMPLEMENTED;
-#define CHECK_MAXIMUM(s, ctx, var) if (!va_checkMaximum(dpy, ctx->max_##var, #var)) s = VA_STATUS_ERROR_UNKNOWN;
-#define CHECK_STRING(s, ctx, var) if (!va_checkString(dpy, ctx->str_##var, #var)) s = VA_STATUS_ERROR_UNKNOWN;
+
+#define CHECK_VTABLE(s, ctx, func) \
+    if (!va_checkVtable(dpy, ctx->vtable->va##func, #func)) { \
+        s = VA_STATUS_ERROR_UNIMPLEMENTED; \
+        va_errorMessage(dpy, "%s %s error\n", driver_path, #func); \
+    }
+
+#define CHECK_MAXIMUM(s, ctx, var) \
+    if (!va_checkMaximum(dpy, ctx->max_##var, #var)) { \
+        s = VA_STATUS_ERROR_UNKNOWN; \
+        va_errorMessage(dpy, "%s %s error\n", driver_path, #var); \
+    }
+
+#define CHECK_STRING(s, ctx, var) \
+    if (!va_checkString(dpy, ctx->str_##var, #var)) { \
+        s = VA_STATUS_ERROR_UNKNOWN; \
+        va_errorMessage(dpy, "%s %s error\n", driver_path, #var); \
+    }
+
+
+// #define CHECK_VTABLE(s, ctx, func) if (!va_checkVtable(dpy, ctx->vtable->va##func, #func)) s = VA_STATUS_ERROR_UNIMPLEMENTED;
+// #define CHECK_MAXIMUM(s, ctx, var) if (!va_checkMaximum(dpy, ctx->max_##var, #var)) s = VA_STATUS_ERROR_UNKNOWN;
+// #define CHECK_STRING(s, ctx, var) if (!va_checkString(dpy, ctx->str_##var, #var)) s = VA_STATUS_ERROR_UNKNOWN;
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
@@ -451,8 +471,11 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                 vaStatus = VA_STATUS_SUCCESS;
                 if (!vtable) {
                     vtable = calloc(1, sizeof(*vtable));
-                    if (!vtable)
+                    if (!vtable) {
                         vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
+                        va_errorMessage(dpy, "%s can't allocate vtable?\n", driver_path);
+                    }
+
                 }
                 ctx->vtable = vtable;
 
@@ -460,8 +483,10 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                     vtable_vpp = calloc(1, sizeof(*vtable_vpp));
                     if (vtable_vpp)
                         vtable_vpp->version = VA_DRIVER_VTABLE_VPP_VERSION;
-                    else
+                    else {
                         vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
+                        va_errorMessage(dpy, "%s can't allocate vtable vpp_version\n", driver_path);
+                    }
                 }
                 ctx->vtable_vpp = vtable_vpp;
 
@@ -469,8 +494,10 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                     vtable_prot = calloc(1, sizeof(*vtable_prot));
                     if (vtable_prot)
                         vtable_prot->version = VA_DRIVER_VTABLE_PROT_VERSION;
-                    else
+                    else {
                         vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
+                        va_errorMessage(dpy, "%s can't allocate vtable prot_version\n", driver_path);
+                    }
                 }
                 ctx->vtable_prot = vtable_prot;
 
