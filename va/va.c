@@ -779,6 +779,9 @@ VAStatus vaInitialize(
     *major_version = VA_MAJOR_VERSION;
     *minor_version = VA_MINOR_VERSION;
 
+    fprintf(stdout, "Hello world! in stdout\n");
+    fprintf(stderr, "Hello world! in stderr\n");
+
     VA_TRACE_LOG(va_TraceInitialize, dpy, major_version, minor_version);
     VA_TRACE_RET(dpy, vaStatus);
     return vaStatus;
