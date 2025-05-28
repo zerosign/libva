@@ -54,22 +54,22 @@
 
 #define ASSERT      assert
 
-#define CHECK_VTABLE(s, ctx, func) \
+#define CHECK_VTABLE(s, ctx, driver_path, func) \
     if (!va_checkVtable(dpy, ctx->vtable->va##func, #func)) { \
         s = VA_STATUS_ERROR_UNIMPLEMENTED; \
-        va_errorMessage(dpy, "%s %s error\n", driver_path, #func); \
+        va_errorMessage(dpy, "%s %s error\n", #driver_path, #func); \
     }
 
-#define CHECK_MAXIMUM(s, ctx, var) \
+#define CHECK_MAXIMUM(s, ctx, driver_path, var) \
     if (!va_checkMaximum(dpy, ctx->max_##var, #var)) { \
         s = VA_STATUS_ERROR_UNKNOWN; \
-        va_errorMessage(dpy, "%s %s error\n", driver_path, #var); \
+        va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
     }
 
-#define CHECK_STRING(s, ctx, var) \
+#define CHECK_STRING(s, ctx, driver_path, var) \
     if (!va_checkString(dpy, ctx->str_##var, #var)) { \
         s = VA_STATUS_ERROR_UNKNOWN; \
-        va_errorMessage(dpy, "%s %s error\n", driver_path, #var); \
+        va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
     }
 
 
@@ -505,51 +505,51 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                     vaStatus = (*init_func)(ctx);
 
                 if (VA_STATUS_SUCCESS == vaStatus) {
-                    CHECK_MAXIMUM(vaStatus, ctx, profiles);
-                    CHECK_MAXIMUM(vaStatus, ctx, entrypoints);
-                    CHECK_MAXIMUM(vaStatus, ctx, attributes);
-                    CHECK_MAXIMUM(vaStatus, ctx, image_formats);
-                    CHECK_MAXIMUM(vaStatus, ctx, subpic_formats);
-                    CHECK_STRING(vaStatus, ctx, vendor);
-                    CHECK_VTABLE(vaStatus, ctx, Terminate);
-                    CHECK_VTABLE(vaStatus, ctx, QueryConfigProfiles);
-                    CHECK_VTABLE(vaStatus, ctx, QueryConfigEntrypoints);
-                    CHECK_VTABLE(vaStatus, ctx, QueryConfigAttributes);
-                    CHECK_VTABLE(vaStatus, ctx, CreateConfig);
-                    CHECK_VTABLE(vaStatus, ctx, DestroyConfig);
-                    CHECK_VTABLE(vaStatus, ctx, GetConfigAttributes);
-                    CHECK_VTABLE(vaStatus, ctx, CreateSurfaces);
-                    CHECK_VTABLE(vaStatus, ctx, DestroySurfaces);
-                    CHECK_VTABLE(vaStatus, ctx, CreateContext);
-                    CHECK_VTABLE(vaStatus, ctx, DestroyContext);
-                    CHECK_VTABLE(vaStatus, ctx, CreateBuffer);
-                    CHECK_VTABLE(vaStatus, ctx, BufferSetNumElements);
-                    CHECK_VTABLE(vaStatus, ctx, MapBuffer);
-                    CHECK_VTABLE(vaStatus, ctx, UnmapBuffer);
-                    CHECK_VTABLE(vaStatus, ctx, DestroyBuffer);
-                    CHECK_VTABLE(vaStatus, ctx, BeginPicture);
-                    CHECK_VTABLE(vaStatus, ctx, RenderPicture);
-                    CHECK_VTABLE(vaStatus, ctx, EndPicture);
-                    CHECK_VTABLE(vaStatus, ctx, SyncSurface);
-                    CHECK_VTABLE(vaStatus, ctx, QuerySurfaceStatus);
-                    CHECK_VTABLE(vaStatus, ctx, QueryImageFormats);
-                    CHECK_VTABLE(vaStatus, ctx, CreateImage);
-                    CHECK_VTABLE(vaStatus, ctx, DeriveImage);
-                    CHECK_VTABLE(vaStatus, ctx, DestroyImage);
-                    CHECK_VTABLE(vaStatus, ctx, SetImagePalette);
-                    CHECK_VTABLE(vaStatus, ctx, GetImage);
-                    CHECK_VTABLE(vaStatus, ctx, PutImage);
-                    CHECK_VTABLE(vaStatus, ctx, QuerySubpictureFormats);
-                    CHECK_VTABLE(vaStatus, ctx, CreateSubpicture);
-                    CHECK_VTABLE(vaStatus, ctx, DestroySubpicture);
-                    CHECK_VTABLE(vaStatus, ctx, SetSubpictureImage);
-                    CHECK_VTABLE(vaStatus, ctx, SetSubpictureChromakey);
-                    CHECK_VTABLE(vaStatus, ctx, SetSubpictureGlobalAlpha);
-                    CHECK_VTABLE(vaStatus, ctx, AssociateSubpicture);
-                    CHECK_VTABLE(vaStatus, ctx, DeassociateSubpicture);
-                    CHECK_VTABLE(vaStatus, ctx, QueryDisplayAttributes);
-                    CHECK_VTABLE(vaStatus, ctx, GetDisplayAttributes);
-                    CHECK_VTABLE(vaStatus, ctx, SetDisplayAttributes);
+                    CHECK_MAXIMUM(vaStatus, ctx, driver_path, profiles);
+                    CHECK_MAXIMUM(vaStatus, ctx, driver_path, entrypoints);
+                    CHECK_MAXIMUM(vaStatus, ctx, driver_path, attributes);
+                    CHECK_MAXIMUM(vaStatus, ctx, driver_path, image_formats);
+                    CHECK_MAXIMUM(vaStatus, ctx, driver_path, subpic_formats);
+                    CHECK_STRING(vaStatus, ctx, driver_path, vendor);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, Terminate);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QueryConfigProfiles);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QueryConfigEntrypoints);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QueryConfigAttributes);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, CreateConfig);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DestroyConfig);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, GetConfigAttributes);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, CreateSurfaces);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DestroySurfaces);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, CreateContext);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DestroyContext);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, CreateBuffer);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, BufferSetNumElements);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, MapBuffer);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, UnmapBuffer);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DestroyBuffer);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, BeginPicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, RenderPicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, EndPicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, SyncSurface);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QuerySurfaceStatus);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QueryImageFormats);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, CreateImage);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DeriveImage);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DestroyImage);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, SetImagePalette);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, GetImage);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, PutImage);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QuerySubpictureFormats);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, CreateSubpicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DestroySubpicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, SetSubpictureImage);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, SetSubpictureChromakey);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, SetSubpictureGlobalAlpha);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, AssociateSubpicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, DeassociateSubpicture);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, QueryDisplayAttributes);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, GetDisplayAttributes);
+                    CHECK_VTABLE(vaStatus, ctx, driver_path, SetDisplayAttributes);
                 }
                 if (VA_STATUS_SUCCESS != vaStatus) {
                     va_errorMessage(dpy, "%s init failed\n", driver_path);
@@ -1366,7 +1366,7 @@ VAStatus vaMFSubmit(
 
     CHECK_DISPLAY(dpy);
     ctx = CTX(dpy);
-    CHECK_VTABLE(vaStatus, ctx, MFSubmit);
+    CHECK_VTABLE(vaStatus, ctx, "", MFSubmit);
     if (ctx->vtable->vaMFSubmit == NULL)
         vaStatus = VA_STATUS_ERROR_UNIMPLEMENTED;
     else {
