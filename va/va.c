@@ -57,19 +57,22 @@
 #define CHECK_VTABLE(s, ctx, driver_path, func) \
     if (!va_checkVtable(dpy, ctx->vtable->va##func, #func)) { \
         s = VA_STATUS_ERROR_UNIMPLEMENTED; \
-        va_errorMessage(dpy, "%s %s error\n", #driver_path, #func); \
+    	fprintf(stderr, "libva error: %s context: %s", #driver_path, #func); \
+        // va_errorMessage(dpy, "%s %s error\n", #driver_path, #func); \
     }
 
 #define CHECK_MAXIMUM(s, ctx, driver_path, var) \
     if (!va_checkMaximum(dpy, ctx->max_##var, #var)) { \
         s = VA_STATUS_ERROR_UNKNOWN; \
-        va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
+    	fprintf(stderr, "libva error: %s context: %s", #driver_path, #var); \
+        // va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
     }
 
 #define CHECK_STRING(s, ctx, driver_path, var) \
     if (!va_checkString(dpy, ctx->str_##var, #var)) { \
         s = VA_STATUS_ERROR_UNKNOWN; \
-        va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
+    	fprintf(stderr, "libva error: %s context: %s", #driver_path, #var); \
+        // va_errorMessage(dpy, "%s %s error\n", #driver_path, #var); \
     }
 
 
@@ -473,7 +476,7 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                     vtable = calloc(1, sizeof(*vtable));
                     if (!vtable) {
                         vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
-                        va_errorMessage(dpy, "%s can't allocate vtable?\n", driver_path);
+                        fprintf(stderr, "can't allocate vtable\n");
                     }
 
                 }
@@ -485,7 +488,7 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                         vtable_vpp->version = VA_DRIVER_VTABLE_VPP_VERSION;
                     else {
                         vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
-                        va_errorMessage(dpy, "%s can't allocate vtable vpp_version\n", driver_path);
+                        fprintf(stderr, "can't allocate vtable vpp_version\n");
                     }
                 }
                 ctx->vtable_vpp = vtable_vpp;
@@ -496,7 +499,7 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                         vtable_prot->version = VA_DRIVER_VTABLE_PROT_VERSION;
                     else {
                         vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
-                        va_errorMessage(dpy, "%s can't allocate vtable prot_version\n", driver_path);
+                        fprintf(stderr, "can't allocate vtable prot_version\n");
                     }
                 }
                 ctx->vtable_prot = vtable_prot;
@@ -1048,6 +1051,7 @@ va_impl_query_surface_attributes(
     image_formats = malloc(num_image_formats * sizeof(*image_formats));
     if (!image_formats) {
         va_status = VA_STATUS_ERROR_ALLOCATION_FAILED;
+	fprintf(stderr, "error on allocating image formats\n");
         goto end;
     }
 
@@ -1060,6 +1064,7 @@ va_impl_query_surface_attributes(
     attribs = malloc(num_attribs * sizeof(*attribs));
     if (!attribs) {
         va_status = VA_STATUS_ERROR_ALLOCATION_FAILED;
+	fprintf(stderr, "error on allocating va surface attributes\n");
         goto end;
     }
 
@@ -1080,6 +1085,7 @@ va_impl_query_surface_attributes(
         attrib->value.value.i = image_formats[i].fourcc;
         if (++n == num_attribs) {
             va_status = VA_STATUS_ERROR_ALLOCATION_FAILED;
+	    fprintf(stderr, "error on appending image formats\n");
             goto end;
         }
     }
