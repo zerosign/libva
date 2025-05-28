@@ -408,6 +408,8 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
     if (!search_path) {
         va_errorMessage(dpy, "%s L%d Out of memory\n",
                         __FUNCTION__, __LINE__);
+
+        printf("412\n");
         return VA_STATUS_ERROR_ALLOCATION_FAILED;
     }
     driver_dir = strtok_r(search_path, ENV_VAR_SEPARATOR, &saveptr);
@@ -417,6 +419,8 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
         if (!driver_path) {
             va_errorMessage(dpy, "%s L%d Out of memory\n",
                             __FUNCTION__, __LINE__);
+
+            printf("422\n");
             free(search_path);
             return VA_STATUS_ERROR_ALLOCATION_FAILED;
         }
@@ -708,6 +712,7 @@ static VAStatus va_new_opendriver(VADisplay dpy)
     vaStatus = pDisplayContext->vaGetDriverNames(pDisplayContext, drivers, &num_drivers);
     if (vaStatus != VA_STATUS_SUCCESS) {
         /* Print and error yet continue, as per the above ordering note */
+        printf("711\n");
         va_errorMessage(dpy, "vaGetDriverNames() failed with %s\n", vaErrorStr(vaStatus));
         num_drivers = 0;
     }
@@ -734,6 +739,8 @@ static VAStatus va_new_opendriver(VADisplay dpy)
         /* The strdup() may have failed. Check here instead of a dozen+ places */
         if (!drivers[i]) {
             va_errorMessage(dpy, "%s:%d: Out of memory\n", __func__, __LINE__);
+
+            printf("739\n");
             vaStatus = VA_STATUS_ERROR_ALLOCATION_FAILED;
             break;
         }
