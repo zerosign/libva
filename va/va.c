@@ -398,6 +398,10 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
     char *saveptr;
     char *driver_dir;
 
+    const char *va_symver_env = NULL;
+
+    va_symver_env = secure_getenv("LIBVA_DRIVER_SYMVER");
+
     if (geteuid() == getuid())
         /* don't allow setuid apps to use LIBVA_DRIVERS_PATH */
         search_path = secure_getenv("LIBVA_DRIVERS_PATH");
@@ -413,6 +417,8 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
         return VA_STATUS_ERROR_ALLOCATION_FAILED;
     }
     driver_dir = strtok_r(search_path, ENV_VAR_SEPARATOR, &saveptr);
+
+
     while (driver_dir) {
         void *handle = NULL;
         char *driver_path = va_getDriverPath(driver_dir, driver_name);
@@ -455,7 +461,15 @@ static VAStatus va_openDriver(VADisplay dpy, char *driver_name)
                 if (va_getDriverInitName(init_func_s, sizeof(init_func_s),
                                          compatible_versions[i].major,
                                          compatible_versions[i].minor)) {
-                    init_func = (VADriverInit)dlsym(handle, init_func_s);
+
+                    // NOTE: just add additional logic for dlvsym thus, we can resolve using external envs symbols
+                    //
+                    if(!va_symver_env) {
+                        init_func = (VADriverInit)dlvsym(handle, init_func_s, va_symver_env);
+                    } else {
+                        init_func = (VADriverInit)dlsym(handle, init_func_s);
+                    }
+
                     if (init_func) {
                         va_infoMessage(dpy, "Found init function %s\n", init_func_s);
                         break;
